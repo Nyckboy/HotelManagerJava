@@ -50,7 +50,7 @@ Note: The first time you run this, it will take a few minutes to download depend
 
 Here is the map of the project. Please only edit the files assigned to your role.
 
-````
+```
 hotelFx/
 ├── data/                            <-- CSV Files (Database) appear here. DO NOT EDIT.
 ├── build.gradle                     <-- Project Configuration. DO NOT TOUCH.
@@ -73,13 +73,11 @@ hotelFx/
     │       ├── BookingService.java  (Reservations)
     │       └── BillingService.java  (Payments)
     │
-    └── ui/                          <-- 🎨 FRONTEND TEAM WORKS HERE
+    └── frontend/                          <-- 🎨 FRONTEND TEAM WORKS HERE
         ├── ScreenManager.java       (Navigation)
         └── screens/                 (Visual Pages)
             ├── LoginScreen.java
             ├── DashboardScreen.java
             ├── RoomScreen.java
             └── BookingScreen.java
-````
-
-
+```

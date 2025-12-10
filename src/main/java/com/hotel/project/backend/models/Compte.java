@@ -3,14 +3,26 @@ package com.hotel.project.backend.models;
 import com.hotel.project.backend.Serialisable;
 
 public class Compte implements Serialisable {
-  public String username;
-  public String password;
-  public String role;
+  private String username;
+  private String password;
+  private String role;
 
   public Compte(String username, String password, String role) {
     this.username = username;
     this.password = password;
     this.role = role;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public String getRole() {
+    return role;
   }
 
   @Override

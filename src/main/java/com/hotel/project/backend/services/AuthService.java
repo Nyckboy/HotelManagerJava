@@ -28,7 +28,7 @@ public class AuthService {
 
   public static Boolean login(String username, String password) {
     for (Compte compte : users) {
-      if (compte.username.equals(username) && compte.password.equals(password)) {
+      if (compte.getUsername().equals(username) && compte.getPassword().equals(password)) {
         currentUser = compte;
         return true;
       }

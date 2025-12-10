@@ -11,6 +11,7 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    com.hotel.project.backend.DatabaseConnection.test();
     AuthService.init();
 
     ScreenManager.init(primaryStage);

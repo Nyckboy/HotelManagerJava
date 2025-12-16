@@ -26,6 +26,11 @@ public class Compte implements Serialisable {
   }
 
   @Override
+  public String toString() {
+    return username + " (" + role + ")";
+  }
+
+  @Override
   public String toCsv() {
     return username + ',' + password + ',' + role;
   }

@@ -59,11 +59,11 @@ public class DashboardScreen {
     VBox layout = new VBox(20);
     layout.setAlignment(Pos.CENTER);
 
-    Label welcome = new Label("Welcome, " + AuthService.currentUser.username);
+    Label welcome = new Label("Welcome, " + AuthService.currentUser.getUsername());
     welcome.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
     layout.getChildren().addAll(welcome);
 
-    if (AuthService.currentUser.role.equals("MANAGER")) {
+    if (AuthService.currentUser.getRole().equals("MANAGER")) {
       Button newAccountBtn = new Button("Create New User");
       newAccountBtn.setOnAction(e -> {
         ScreenManager.setScene(CreateAccountScreen.getScene());

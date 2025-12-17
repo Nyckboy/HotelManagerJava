@@ -18,7 +18,7 @@ public class CreateAccountScreen {
     layout.setAlignment(Pos.CENTER);
     layout.setPadding(new Insets(20));
 
-    Label welcome = new Label("Welcome, " + AuthService.currentUser.username);
+    Label welcome = new Label("Welcome, " + AuthService.currentUser.getUsername());
     welcome.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
     Label header = new Label("--- Create New Account ---");

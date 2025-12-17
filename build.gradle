@@ -18,6 +18,7 @@ repositories {
 dependencies {
     implementation 'org.openjfx:javafx-controls:21'
     implementation 'org.openjfx:javafx-fxml:21'
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
 }
 
 java {

@@ -2,23 +2,25 @@ package com.hotel.project.frontend.screens;
 
 import com.hotel.project.backend.models.Room;
 import com.hotel.project.backend.services.RoomService;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import javafx.scene.paint.Color;
 
 public class RoomScreen {
 
-    private final RoomService roomService = new RoomService();
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+    private TableView<Room> table;
+    private Label statusLabel;
 
-    public void start(Stage stage) {
+    public static Scene getScene() {
+        RoomScreen screen = new RoomScreen();
+        return screen.buildScene();
+    }
 
+    private Scene buildScene() {
         // ---- Title ----
         Label title = new Label("Room Manager");
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
@@ -27,92 +29,209 @@ public class RoomScreen {
         TextField numberField = new TextField();
         numberField.setPromptText("Room Number");
 
-        TextField typeField = new TextField();
-        typeField.setPromptText("Type (Single, Double...)");
+        // ComboBox pour le type de chambre avec choix prédéfinis
+        ComboBox<String> typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("Single", "Double", "Twin", "Suite", "Deluxe", "Family");
+        typeComboBox.setPromptText("Select Room Type");
+        typeComboBox.setPrefWidth(200);
 
         TextField priceField = new TextField();
-        priceField.setPromptText("Price");
+        priceField.setPromptText("Price per night");
 
         Button addBtn = new Button("Add Room");
+        addBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
 
-        Label statusLabel = new Label("");
+        statusLabel = new Label("");
+        statusLabel.setStyle("-fx-font-size: 12px;");
 
         addBtn.setOnAction(e -> {
-            executor.submit(() -> {
-                try {
-                    int num = Integer.parseInt(numberField.getText());
-                    double price = Double.parseDouble(priceField.getText());
-                    String type = typeField.getText();
+            // Validation des champs
+            if (numberField.getText().isEmpty() || 
+                typeComboBox.getValue() == null || 
+                priceField.getText().isEmpty()) {
+                showError("Error: All fields are required!");
+                return;
+            }
 
-                    roomService.createRoom(num, type, price);
+            try {
+                int num = Integer.parseInt(numberField.getText());
+                double price = Double.parseDouble(priceField.getText());
+                String type = typeComboBox.getValue();
 
-                    statusLabel.setText("Room added successfully!");
-                } catch (Exception ex) {
-                    statusLabel.setText("Error: Invalid data!");
+                // Validation métier
+                if (num <= 0) {
+                    showError("Error: Room number must be positive!");
+                    return;
                 }
-            });
+
+                if (price < 0) {
+                    showError("Error: Price cannot be negative!");
+                    return;
+                }
+
+                // Vérifier si la chambre existe déjà
+                if (RoomService.roomExists(num)) {
+                    showError("Error: Room " + num + " already exists!");
+                    return;
+                }
+
+                // Créer la chambre
+                if (RoomService.createRoom(num, type, price)) {
+                    showSuccess("Room " + num + " added successfully!");
+                    // Vider les champs
+                    numberField.clear();
+                    typeComboBox.setValue(null);
+                    priceField.clear();
+                    // Rafraîchir la table
+                    refreshTable();
+                } else {
+                    showError("Error: Failed to add room. Check console for details.");
+                }
+            } catch (NumberFormatException ex) {
+                showError("Error: Invalid number format! Room number and price must be numbers.");
+            }
         });
 
-        VBox form = new VBox(10, numberField, typeField, priceField, addBtn, statusLabel);
+        VBox form = new VBox(10, numberField, typeComboBox, priceField, addBtn, statusLabel);
         form.setPadding(new Insets(10));
         form.setAlignment(Pos.CENTER);
 
         // ---- Table: List rooms ----
-        TableView<Room> table = new TableView<>();
+        table = new TableView<>();
+        
         TableColumn<Room, Integer> c1 = new TableColumn<>("Number");
         c1.setCellValueFactory(data -> data.getValue().numberProperty().asObject());
+        c1.setPrefWidth(80);
 
         TableColumn<Room, String> c2 = new TableColumn<>("Type");
         c2.setCellValueFactory(data -> data.getValue().typeProperty());
+        c2.setPrefWidth(150);
 
-        TableColumn<Room, Boolean> c3 = new TableColumn<>("Available");
-        c3.setCellValueFactory(data -> data.getValue().isAvailableProperty().asObject());
+        TableColumn<Room, Double> c3 = new TableColumn<>("Price");
+        c3.setCellValueFactory(data -> data.getValue().priceProperty().asObject());
+        c3.setPrefWidth(100);
+        // Formater le prix avec 2 décimales
+        c3.setCellFactory(column -> new TableCell<Room, Double>() {
+            @Override
+            protected void updateItem(Double price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%.2f", price));
+                }
+            }
+        });
 
-        table.getColumns().addAll(c1, c2, c3);
-        table.setPrefHeight(200);
+        TableColumn<Room, Boolean> c4 = new TableColumn<>("Available");
+        c4.setCellValueFactory(data -> data.getValue().isAvailableProperty().asObject());
+        c4.setPrefWidth(100);
 
-        Button refreshBtn = new Button("Show Available Rooms");
+        table.getColumns().addAll(c1, c2, c3, c4);
+        table.setPrefHeight(250);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        refreshBtn.setOnAction(e -> {
-            executor.submit(() -> {
-                var list = roomService.getAvailableRooms();
+        // Boutons pour la table
+        Button refreshAllBtn = new Button("Show All Rooms");
+        refreshAllBtn.setOnAction(e -> {
+            refreshTable();
+            showInfo("Showing all rooms");
+        });
+
+        Button refreshAvailableBtn = new Button("Show Available Rooms Only");
+        refreshAvailableBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+        refreshAvailableBtn.setOnAction(e -> {
+            Platform.runLater(() -> {
+                var list = RoomService.getAvailableRooms();
                 table.getItems().setAll(list);
+                showInfo("Showing " + list.size() + " available room(s)");
             });
         });
 
-        VBox tableBox = new VBox(10, refreshBtn, table);
+        HBox tableButtons = new HBox(10, refreshAllBtn, refreshAvailableBtn);
+        tableButtons.setAlignment(Pos.CENTER);
+
+        VBox tableBox = new VBox(10, tableButtons, table);
         tableBox.setPadding(new Insets(10));
         tableBox.setAlignment(Pos.CENTER);
 
         // ---- Update Room Status ----
+        Label updateLabel = new Label("Update Room Status");
+        updateLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
         TextField roomIdField = new TextField();
         roomIdField.setPromptText("Room number");
 
         CheckBox freeCheck = new CheckBox("Is Available");
+        freeCheck.setSelected(true);
 
         Button updateBtn = new Button("Update Status");
+        updateBtn.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
 
-        updateBtn.setOnAction(e -> executor.submit(() -> {
+        updateBtn.setOnAction(e -> {
+            if (roomIdField.getText().isEmpty()) {
+                showError("Error: Room number is required!");
+                return;
+            }
+
             try {
                 int num = Integer.parseInt(roomIdField.getText());
                 boolean free = freeCheck.isSelected();
-                roomService.updateRoomStatus(num, free);
-                statusLabel.setText("Room status updated.");
-            } catch (Exception ex) {
-                statusLabel.setText("Error while updating!");
-            }
-        }));
 
-        VBox updateBox = new VBox(10, roomIdField, freeCheck, updateBtn);
+                if (!RoomService.roomExists(num)) {
+                    showError("Error: Room " + num + " does not exist!");
+                    return;
+                }
+
+                if (RoomService.updateRoomStatus(num, free)) {
+                    showSuccess("Room " + num + " status updated to " + (free ? "available" : "occupied"));
+                    roomIdField.clear();
+                    refreshTable();
+                } else {
+                    showError("Error: Failed to update room status!");
+                }
+            } catch (NumberFormatException ex) {
+                showError("Error: Room number must be a valid integer!");
+            }
+        });
+
+        VBox updateBox = new VBox(10, updateLabel, roomIdField, freeCheck, updateBtn);
         updateBox.setAlignment(Pos.CENTER);
+        updateBox.setPadding(new Insets(10));
 
         // ---- Main Layout ----
         VBox root = new VBox(20, title, form, tableBox, updateBox);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.TOP_CENTER);
 
-        stage.setScene(new Scene(root, 600, 600));
-        stage.setTitle("Manage Rooms");
-        stage.show();
+        // Charger les chambres au démarrage
+        refreshTable();
+
+        return new Scene(root, 700, 650);
+    }
+
+    private void refreshTable() {
+        Platform.runLater(() -> {
+            var list = RoomService.getAllRooms();
+            table.getItems().setAll(list);
+            if (list.isEmpty()) {
+                showInfo("No rooms found. Add your first room!");
+            }
+        });
+    }
+
+    private void showError(String message) {
+        statusLabel.setText(message);
+        statusLabel.setTextFill(Color.RED);
+    }
+
+    private void showSuccess(String message) {
+        statusLabel.setText(message);
+        statusLabel.setTextFill(Color.GREEN);
+    }
+
+    private void showInfo(String message) {
+        statusLabel.setText(message);
+        statusLabel.setTextFill(Color.BLUE);
     }
 }

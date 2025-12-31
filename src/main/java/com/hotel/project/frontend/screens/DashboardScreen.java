@@ -73,12 +73,9 @@ public class DashboardScreen {
 
     Button roomsBtn = new Button("Manage Rooms");
     roomsBtn.setOnAction(e -> {
-      // CORRECTION: OUVRE RoomScreen dans un nouveau Stage
-      RoomScreen rs = new RoomScreen();
-      Stage stage = new Stage();
-      rs.start(stage);
+      ScreenManager.setScene(RoomScreen.getScene());
+      ScreenManager.setTitle("Manage Rooms");
     });
-    
     Button logoutBtn = new Button("Logout [→");
     logoutBtn.setOnAction(e -> {
       AuthService.logout();

@@ -144,13 +144,14 @@ public class RoomService {
     }
 
     /**
-     * Met à jour les informations d'une chambre (type et prix)
+     * Met à jour les informations d'une chambre (type, prix et disponibilité)
      * @param number Numéro de la chambre
      * @param type Nouveau type
      * @param price Nouveau prix
+     * @param available Nouveau statut de disponibilité
      * @return true si la mise à jour a réussi, false sinon
      */
-    public static boolean updateRoom(int number, String type, double price) {
+    public static boolean updateRoom(int number, String type, double price, boolean available) {
         if (!roomExists(number)) {
             System.err.println("Room " + number + " does not exist!");
             return false;
@@ -166,8 +167,8 @@ public class RoomService {
             return false;
         }
         
-        String sql = "UPDATE rooms SET type = ?, price = ? WHERE number = ?";
-        boolean success = DatabaseHelper.executeUpdate(sql, type.trim(), price, number);
+        String sql = "UPDATE rooms SET type = ?, price = ?, is_available = ? WHERE number = ?";
+        boolean success = DatabaseHelper.executeUpdate(sql, type.trim(), price, available, number);
         
         if (success) {
             System.out.println("Room " + number + " updated successfully!");

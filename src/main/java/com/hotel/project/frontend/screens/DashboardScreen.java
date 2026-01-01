@@ -5,7 +5,8 @@ import com.hotel.project.frontend.ScreenManager;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class DashboardScreen {
@@ -18,6 +19,7 @@ public class DashboardScreen {
     welcome.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
     layout.getChildren().addAll(welcome);
 
+    // Gestion des utilisateurs (si manager)
     if (AuthService.currentUser.getRole().equals("MANAGER")) {
       Button newAccountBtn = new Button("Create New User");
       newAccountBtn.setOnAction(e -> {
@@ -26,17 +28,29 @@ public class DashboardScreen {
       layout.getChildren().addAll(newAccountBtn);
     }
 
+    // Gestion des chambres
     Button roomsBtn = new Button("Manage Rooms");
     roomsBtn.setOnAction(e -> {
-      // TODO we change the scene to the room's scene when it s ready
-      // ScreenManager.setScreen();
+      ScreenManager.setScene(RoomScreen.getScene());
+      ScreenManager.setTitle("Manage Rooms");
     });
+
+    // Gestion des réservations
+    Button reservationBtn = new Button("📘 Réservations");
+    reservationBtn.setOnAction(e -> {
+      ScreenManager.setScene(ReservationScreen.getScene());
+      ScreenManager.setTitle("Manage Reservations");
+    });
+
+    // Bouton de logout
     Button logoutBtn = new Button("Logout [→");
     logoutBtn.setOnAction(e -> {
       AuthService.logout();
       ScreenManager.setScene(LoginScreen.getScene());
     });
-    layout.getChildren().addAll(roomsBtn, logoutBtn);
-    return new Scene(layout, 400, 400);
+
+    layout.getChildren().addAll(roomsBtn, reservationBtn, logoutBtn);
+
+    return new Scene(layout, 400, 450);
   }
 }

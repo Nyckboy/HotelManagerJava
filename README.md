@@ -108,7 +108,7 @@ hotelFx/
     ├── backend/                     <-- ⚙️ BACKEND TEAM WORKS HERE
     │   ├── CsvService.java          (Engine: Saves data to files)
     │   ├── Serialisable.java        (Interface: Objects -> CSV)
-│   │   │── DatabaseConnection.java  <-- Setup DB Password here
+    │   │── DatabaseConnection.java  <-- Setup DB Password here
     │   ├── DatabaseHelper.java      <-- The Engine (Don't touch!)
     │   ├── RowMapper.java           <-- Interface for Mapping
     │   │

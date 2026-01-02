@@ -9,6 +9,8 @@ public class Reservation {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    public String clientName = "";
+
     // Constructeur complet
     public Reservation(int id, int clientId, int roomNumber, LocalDate startDate, LocalDate endDate) {
         this.id = id;
@@ -41,6 +43,8 @@ public class Reservation {
 
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+
+    public String getClientName() { return clientName; }
 
     @Override
     public String toString() {

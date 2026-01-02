@@ -67,7 +67,7 @@ public class FinanceService {
         List<Reservation> allReservations = ReservationService.getAllReservations(); // Reuse your existing service
 
         for (Reservation res : allReservations) {
-            double remaining = calculateRemainingBill(res.id);
+            double remaining = calculateRemainingBill(res.getId());
             if (remaining > 0) {
                 lateList.add(res);
             }

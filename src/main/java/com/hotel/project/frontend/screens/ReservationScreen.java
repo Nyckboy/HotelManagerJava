@@ -3,6 +3,7 @@ package com.hotel.project.frontend.screens;
 import com.hotel.project.backend.DatabaseHelper;
 import com.hotel.project.backend.models.Reservation;
 import com.hotel.project.backend.services.ReservationService;
+import com.hotel.project.frontend.ScreenManager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,7 +62,12 @@ public class ReservationScreen {
         Button editBtn = new Button("Modifier");
         Button deleteBtn = new Button("Supprimer");
 
-        HBox buttons = new HBox(10, addBtn, editBtn, deleteBtn);
+        Button backBtn = new Button("← Back");
+            backBtn.setOnAction(e -> {
+            ScreenManager.setScene(DashboardScreen.getScene());
+        });
+
+        HBox buttons = new HBox(10, addBtn, editBtn, deleteBtn, backBtn);
 
         layout.getChildren().addAll(table, buttons);
 

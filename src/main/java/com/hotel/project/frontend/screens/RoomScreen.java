@@ -2,6 +2,8 @@ package com.hotel.project.frontend.screens;
 
 import com.hotel.project.backend.models.Room;
 import com.hotel.project.backend.services.RoomService;
+import com.hotel.project.frontend.ScreenManager;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -233,7 +235,12 @@ public class RoomScreen {
             }
         });
 
-        VBox updateBox = new VBox(10, updateLabel, roomIdField, freeCheck, updateBtn);
+        Button backBtn = new Button("← Back");
+            backBtn.setOnAction(e -> {
+            ScreenManager.setScene(DashboardScreen.getScene());
+        });
+
+        VBox updateBox = new VBox(10, updateLabel, roomIdField, freeCheck, updateBtn, backBtn);
         updateBox.setAlignment(Pos.CENTER);
         updateBox.setPadding(new Insets(10));
 

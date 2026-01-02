@@ -53,11 +53,20 @@ CREATE TABLE clients (
 
 CREATE TABLE reservations (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    client_id INT,
-    room_number INT,
-    status VARCHAR(20),
-    FOREIGN KEY (client_id) REFERENCES clients(id),
-    FOREIGN KEY (room_number) REFERENCES rooms(number)
+    client_id INT NOT NULL,
+    room_number INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
+    FOREIGN KEY (room_number) REFERENCES rooms(number) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reservation_id INT NOT NULL,
+    amount DOUBLE NOT NULL,
+    payment_date DATE NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE
 );
 
 -- Default Admin Account

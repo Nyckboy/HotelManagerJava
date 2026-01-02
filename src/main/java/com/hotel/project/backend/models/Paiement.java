@@ -14,4 +14,9 @@ public class Paiement {
         this.amount = amount;
         this.date = date;
     }
+
+    public int getId() { return id; }
+    public int getReservationId() { return reservationId; }
+    public double getAmount() { return amount; }
+    public LocalDate getDate() { return date; }
 }

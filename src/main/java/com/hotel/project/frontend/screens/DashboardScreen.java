@@ -35,6 +35,12 @@ public class DashboardScreen {
       ScreenManager.setTitle("Manage Rooms");
     });
 
+    Button clientBtn = new Button("Manage Clients");
+      clientBtn.setStyle("-fx-font-size: 14px; -fx-pref-width: 150px;");
+      clientBtn.setOnAction(e -> {
+      ScreenManager.setScene(ClientScreen.getScene());
+    });
+
     // Gestion des réservations
     Button reservationBtn = new Button("📘 Réservations");
     reservationBtn.setOnAction(e -> {
@@ -49,7 +55,7 @@ public class DashboardScreen {
       ScreenManager.setScene(LoginScreen.getScene());
     });
 
-    layout.getChildren().addAll(roomsBtn, reservationBtn, logoutBtn);
+    layout.getChildren().addAll(roomsBtn, clientBtn,reservationBtn, logoutBtn);
 
     return new Scene(layout, 400, 450);
   }

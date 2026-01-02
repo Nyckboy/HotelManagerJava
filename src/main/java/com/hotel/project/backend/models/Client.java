@@ -12,6 +12,14 @@ public class Client {
         this.lastName = lastName;
         this.phone = phone;
     }
+
+    public int getId() { return id; }
+    
+    public String getFirstName() { return firstName; }
+    
+    public String getLastName() { return lastName; }
+    
+    public String getPhone() { return phone; }
     
     // Helper for displaying in Dropdowns
     @Override

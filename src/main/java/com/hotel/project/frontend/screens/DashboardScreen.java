@@ -25,7 +25,7 @@ public class DashboardScreen {
     header.setAlignment(Pos.CENTER);
     header.setStyle("-fx-background-color: #2c3e50;"); // Dark Blue Header
 
-    Label appTitle = new Label("HOTEL MANAGER PRO");
+    Label appTitle = new Label("HOTEL MANAGER");
     appTitle.setTextFill(Color.WHITE);
     appTitle.setFont(new Font("Arial", 24));
     appTitle.setStyle("-fx-font-weight: bold;");

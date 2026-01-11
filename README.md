@@ -2,6 +2,32 @@
 
 Welcome to the Hotel Management System project! This application manages clients, rooms, reservations, and billing without using an external database. We use JavaFX for the interface and CSV files to save data.
 
+# ✨ Key Features
+
+   **🔐 Role-Based Authentication:** Secure login for Managers (Admin access) and Receptionists.
+
+   **🛏️ Room Management:** Real-time tracking of room availability, types, and pricing. Includes CSV export.
+
+   **📅 Smart Reservations:** Booking engine with automatic date-conflict detection.
+
+   **👥 Client CRM:** Complete database of guests with search and history capabilities.
+
+   **💰 Finance & Billing:** Automated bill calculation, partial payment tracking, and revenue history.
+
+   **🎨 Modern UI:** Clean, card-based interface with custom CSS styling and responsive layouts.
+
+   ### 🛠️ Tech Stack
+
+| Component       | Technology |
+|-----------------|------------|
+| **Language** | ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white) |
+| **Frontend** | ![JavaFX](https://img.shields.io/badge/JavaFX-2C3E50?style=for-the-badge&logo=java&logoColor=white) |
+| **Database** | ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) |
+| **Build Tool** | ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white) |
+| **IDE** | ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=for-the-badge&logo=intellij-idea&logoColor=white) |
+
+---
+
 # 🛠️ 1. Setup & Installation
 
 ## Step A: Install Java (JDK 21)
